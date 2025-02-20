@@ -1,7 +1,5 @@
 #pragma once
 
-#include "pch.h"
-
 #ifdef _MSC_VER
 #define FORWARDED_EXPORT_WITH_ORDINAL(exp_name, ordinal, target_name) __pragma (comment (linker, "/export:" #exp_name "=" #target_name ",@" #ordinal))
 #endif
