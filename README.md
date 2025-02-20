@@ -10,7 +10,7 @@ Setup:
 - Create environment variable USM_PATH that indicates path to root folder where game is installed (example: C:\Ultimate Spider-Man)
 - Open solution. Build & Run
 
-Project configuration details:
+Project configuration details (JFYI, no need to take these actions by yourself. Everything is already configured):
 
 ![cfg_1](https://github.com/user-attachments/assets/b95ba562-e269-475b-939a-6ea350bfce34)
 ![cfg_2](https://github.com/user-attachments/assets/d279651a-2c20-4296-b316-84bd1629ee1b)
