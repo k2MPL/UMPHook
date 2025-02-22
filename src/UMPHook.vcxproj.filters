@@ -21,5 +21,19 @@
     <ClCompile Include="Bink32Forwards.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="Objects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Objects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
