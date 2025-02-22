@@ -12,6 +12,7 @@
 
 class WindowedModeModule
 {
+private:
     static RegisterGameWindowClass_Decl(RegisterWindowClass)
     {
         WndProc_Original = _wndProc;
@@ -56,7 +57,7 @@ class WindowedModeModule
     }
 
 public:
-    void init()
+    static void Init()
     {
         MH_CreateHook(functions::RegisterGameWindowClass, RegisterWindowClass, (LPVOID*)&RegisterGameWindowClass_Trampoline);
         MH_EnableHook(functions::RegisterGameWindowClass);
@@ -75,7 +76,7 @@ private:
     static functions::CreateGameWindow_t CreateGameWindow_Trampoline;
     static functions::CreateD3D_t CreateD3D_Trampoline;
 
-} gWindowedModeModule;
+};
 
 WNDPROC WindowedModeModule::WndProc_Original{ nullptr };
 
@@ -91,7 +92,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
         {
             if (MH_Initialize() == MH_OK)
             {
-                gWindowedModeModule.init();
+                WindowedModeModule::Init();
             }
         }
         break;

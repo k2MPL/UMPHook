@@ -10,10 +10,10 @@ namespace objects
 
     extern ATOM* const gWindowClassID;
 
-    // Created and initialized by CreateWindowFunc, assigned in CreateWindowFunc
+    // Created and initialized by CreateWindow func., assigned in CreateWindow func.
     extern HWND* const gWindowHandle_0;
 
-    // Created and initialized by CreateD3D (in case if window was not created before this call), assigned in CreateD3D
+    // Created and initialized by CreateD3D func. (in case if window was not created before this call), assigned in CreateD3D func.
     extern HWND* const gWindowHandle_1;
 
     extern CHAR* const gWindowName;
