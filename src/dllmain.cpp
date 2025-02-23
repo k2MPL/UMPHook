@@ -1,5 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <Windows.h>
 #include <WinUser.h>
 
@@ -145,6 +143,26 @@ private:
 
 functions::FSOpenFile_t FileSystemModule::FSOpenFile_Trampoline{ nullptr };
 
+struct StartupOptions
+{
+    bool enableWindowModule{ false };
+    bool enableFileSystemModule{ false };
+};
+
+StartupOptions gStartupOptions;
+
+void ReadStartupOptions()
+{
+    // CMD:
+    // -eWnd
+    // -eFS
+
+    //#TODO: parse cmd line
+
+    gStartupOptions.enableWindowModule = true;
+    gStartupOptions.enableFileSystemModule = false;
+}
+
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
     switch (ul_reason_for_call)
@@ -158,8 +176,13 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
                 UNUSED_RETURN(freopen("CONOUT$", "w", stdout));
                 UNUSED_RETURN(freopen("CONOUT$", "w", stderr));
 
-                WindowedModeModule::Init();
-                FileSystemModule::Init();
+                ReadStartupOptions();
+
+                if(gStartupOptions.enableWindowModule)
+                    WindowedModeModule::Init();
+
+                if(gStartupOptions.enableFileSystemModule)
+                    FileSystemModule::Init();
             }
         }
         break;
