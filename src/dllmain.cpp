@@ -3,12 +3,16 @@
 #include <Windows.h>
 #include <WinUser.h>
 
+#include <stdio.h>
+
 #include "Bink32Forwards.h"
 
 #include "Functions.h"
 #include "Objects.h"
 
 #include <MinHook.h>
+
+#define UNUSED_RETURN(FUNC) (void)FUNC
 
 class WindowedModeModule
 {
@@ -88,6 +92,8 @@ class FileSystemModule
 private:
     static FSOpenFile_Decl(FSOpenFile)
     {
+        printf("FileSystemModule::FSOpenFile: %s\n", _lpFileName);
+
         DWORD dwFlagsAndAttributes = _flags;
         dwFlagsAndAttributes <<= 0x1C;
         dwFlagsAndAttributes = ~dwFlagsAndAttributes;
@@ -147,6 +153,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
         {
             if (MH_Initialize() == MH_OK)
             {
+                AllocConsole();
+
+                UNUSED_RETURN(freopen("CONOUT$", "w", stdout));
+                UNUSED_RETURN(freopen("CONOUT$", "w", stderr));
+
                 WindowedModeModule::Init();
                 FileSystemModule::Init();
             }
