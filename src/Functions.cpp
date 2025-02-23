@@ -9,6 +9,8 @@ namespace functions
     RegisterGameWindowClass_t const RegisterGameWindowClass = (RegisterGameWindowClass_t)(0x0081BFB0);
 
     CreateGameWindow_t const CreateGameWindow = (CreateGameWindow_t)(0x0081C030);
-
+    
     CreateD3D_t const CreateD3D = (CreateD3D_t)(0x0076D680);
+
+    FSOpenFile_t const FSOpenFile = (FSOpenFile_t)(0x0079FF10);
 }

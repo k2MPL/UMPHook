@@ -75,7 +75,6 @@ private:
     static functions::RegisterGameWindowClass_t RegisterGameWindowClass_Trampoline;
     static functions::CreateGameWindow_t CreateGameWindow_Trampoline;
     static functions::CreateD3D_t CreateD3D_Trampoline;
-
 };
 
 WNDPROC WindowedModeModule::WndProc_Original{ nullptr };
@@ -83,6 +82,62 @@ WNDPROC WindowedModeModule::WndProc_Original{ nullptr };
 functions::RegisterGameWindowClass_t WindowedModeModule::RegisterGameWindowClass_Trampoline{ nullptr };
 functions::CreateGameWindow_t WindowedModeModule::CreateGameWindow_Trampoline{ nullptr };
 functions::CreateD3D_t WindowedModeModule::CreateD3D_Trampoline{ nullptr };
+
+class FileSystemModule
+{
+private:
+    static FSOpenFile_Decl(FSOpenFile)
+    {
+        DWORD dwFlagsAndAttributes = _flags;
+        dwFlagsAndAttributes <<= 0x1C;
+        dwFlagsAndAttributes = ~dwFlagsAndAttributes;
+        dwFlagsAndAttributes &= FILE_FLAG_NO_BUFFERING;
+        dwFlagsAndAttributes |= FILE_FLAG_OVERLAPPED;
+
+        DWORD dwCreationDisposition = _flags;
+        dwCreationDisposition >>= 0x2;
+        dwCreationDisposition = ~dwCreationDisposition;
+        dwCreationDisposition &= CREATE_NEW;
+        dwCreationDisposition |= CREATE_ALWAYS;
+
+        DWORD dwShareMode = _flags;
+        dwShareMode &= (FILE_SHARE_READ | FILE_SHARE_WRITE);
+
+        //#TODO: Clarify. WTF is that magic with dwDesiredAccess...
+        DWORD dwDesiredAccess = _flags;
+        dwDesiredAccess &= 0x2;
+        dwDesiredAccess |= (_flags << 2);
+        dwDesiredAccess <<= 0x1D;
+
+        HANDLE result = CreateFileA(_lpFileName, dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
+        if (result == INVALID_HANDLE_VALUE)
+        {
+            return GetLastError();
+        }
+
+        if (_flags & 0x4)
+        {
+            SetFilePointerEx(result, _distanceToMove, NULL, 0);
+            SetEndOfFile(result);
+            SetFilePointer(result, 0, NULL, 0);
+        }
+
+        *_hResult = result;
+        return 0;
+    }
+
+public:
+    static void Init()
+    {
+        MH_CreateHook(functions::FSOpenFile, FSOpenFile, (LPVOID*)&FSOpenFile_Trampoline);
+        MH_EnableHook(functions::FSOpenFile);
+    }
+
+private:
+    static functions::FSOpenFile_t FSOpenFile_Trampoline;
+};
+
+functions::FSOpenFile_t FileSystemModule::FSOpenFile_Trampoline{ nullptr };
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
@@ -93,6 +148,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
             if (MH_Initialize() == MH_OK)
             {
                 WindowedModeModule::Init();
+                FileSystemModule::Init();
             }
         }
         break;

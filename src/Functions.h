@@ -4,6 +4,8 @@
 
 namespace functions
 {
+    // Windown & D3D
+
     #define USMWinMain_Decl(NAME) int __stdcall NAME(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdLine, int _nShowCmd)
     typedef int(* __stdcall USMWinMain_t)(HINSTANCE, HINSTANCE, LPSTR, int);
     extern USMWinMain_t const USMWinMain;
@@ -19,8 +21,14 @@ namespace functions
     #define CreateGameWindow_Decl(NAME) HWND __cdecl NAME(LPCSTR _lpClassName, LPCSTR _lpWindowName, HINSTANCE _hInstance, int _x, int _y, int _width, int _height, BOOL _isFullScreen)
     typedef HWND(* __cdecl CreateGameWindow_t)(LPCSTR, LPCSTR, HINSTANCE, int, int, int, int, BOOL);
     extern CreateGameWindow_t const CreateGameWindow;
-
+    
     #define CreateD3D_Decl(NAME) HRESULT __cdecl NAME(HWND _hWnd)
     typedef HRESULT(*__cdecl CreateD3D_t)(HWND);
     extern CreateD3D_t const CreateD3D;
+
+    // File system
+
+    #define FSOpenFile_Decl(NAME) DWORD __cdecl NAME(HANDLE* _hResult, LPCSTR _lpFileName, DWORD _flags, LARGE_INTEGER _distanceToMove)
+    typedef DWORD(*__cdecl FSOpenFile_t)(HANDLE*, LPCSTR, DWORD, LARGE_INTEGER);
+    extern FSOpenFile_t const FSOpenFile;
 }
