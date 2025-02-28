@@ -21,4 +21,8 @@ namespace objects
     extern LPDIRECT3D9* const gD3D;
 
     extern LPDIRECT3DDEVICE9* const gD3DDevice;
+
+    //#TODO: Investigate: maybe field of bigger 'statictics' struct
+    //#TODO: Maybe change type to int. Investigate
+    extern DWORD* const gTotalMemoryAllocated;
 }

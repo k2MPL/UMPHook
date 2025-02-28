@@ -5,6 +5,7 @@
 
 #include "Bink32Forwards.h"
 
+#include "FunctionsDecompiled.h"
 #include "Functions.h"
 #include "Objects.h"
 
@@ -85,68 +86,10 @@ functions::RegisterGameWindowClass_t WindowedModeModule::RegisterGameWindowClass
 functions::CreateGameWindow_t WindowedModeModule::CreateGameWindow_Trampoline{ nullptr };
 functions::CreateD3D_t WindowedModeModule::CreateD3D_Trampoline{ nullptr };
 
-class FileSystemModule
-{
-private:
-    static FSOpenFile_Decl(FSOpenFile)
-    {
-        printf("FileSystemModule::FSOpenFile: %s\n", _lpFileName);
-
-        DWORD dwFlagsAndAttributes = _flags;
-        dwFlagsAndAttributes <<= 0x1C;
-        dwFlagsAndAttributes = ~dwFlagsAndAttributes;
-        dwFlagsAndAttributes &= FILE_FLAG_NO_BUFFERING;
-        dwFlagsAndAttributes |= FILE_FLAG_OVERLAPPED;
-
-        DWORD dwCreationDisposition = _flags;
-        dwCreationDisposition >>= 0x2;
-        dwCreationDisposition = ~dwCreationDisposition;
-        dwCreationDisposition &= CREATE_NEW;
-        dwCreationDisposition |= CREATE_ALWAYS;
-
-        DWORD dwShareMode = _flags;
-        dwShareMode &= (FILE_SHARE_READ | FILE_SHARE_WRITE);
-
-        //#TODO: Clarify. WTF is that magic with dwDesiredAccess...
-        DWORD dwDesiredAccess = _flags;
-        dwDesiredAccess &= 0x2;
-        dwDesiredAccess |= (_flags << 2);
-        dwDesiredAccess <<= 0x1D;
-
-        HANDLE result = CreateFileA(_lpFileName, dwDesiredAccess, dwShareMode, NULL, dwCreationDisposition, dwFlagsAndAttributes, NULL);
-        if (result == INVALID_HANDLE_VALUE)
-        {
-            return GetLastError();
-        }
-
-        if (_flags & 0x4)
-        {
-            SetFilePointerEx(result, _distanceToMove, NULL, 0);
-            SetEndOfFile(result);
-            SetFilePointer(result, 0, NULL, 0);
-        }
-
-        *_hResult = result;
-        return 0;
-    }
-
-public:
-    static void Init()
-    {
-        MH_CreateHook(functions::FSOpenFile, FSOpenFile, (LPVOID*)&FSOpenFile_Trampoline);
-        MH_EnableHook(functions::FSOpenFile);
-    }
-
-private:
-    static functions::FSOpenFile_t FSOpenFile_Trampoline;
-};
-
-functions::FSOpenFile_t FileSystemModule::FSOpenFile_Trampoline{ nullptr };
-
 struct StartupOptions
 {
+    bool enableDecompiled{ false };
     bool enableWindowModule{ false };
-    bool enableFileSystemModule{ false };
 };
 
 StartupOptions gStartupOptions;
@@ -154,13 +97,13 @@ StartupOptions gStartupOptions;
 void ReadStartupOptions()
 {
     // CMD:
+    // -eDecomp
     // -eWnd
-    // -eFS
 
     //#TODO: parse cmd line
 
+    gStartupOptions.enableDecompiled = false;
     gStartupOptions.enableWindowModule = true;
-    gStartupOptions.enableFileSystemModule = false;
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
@@ -178,11 +121,15 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 
                 ReadStartupOptions();
 
-                if(gStartupOptions.enableWindowModule)
-                    WindowedModeModule::Init();
-
-                if(gStartupOptions.enableFileSystemModule)
-                    FileSystemModule::Init();
+                if (gStartupOptions.enableDecompiled)
+                {
+                    FunctionsDecompiledModule::Init();
+                }
+                else
+                {
+                    if (gStartupOptions.enableWindowModule)
+                        WindowedModeModule::Init();
+                }
             }
         }
         break;

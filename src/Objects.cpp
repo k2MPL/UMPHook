@@ -15,4 +15,6 @@ namespace objects
     LPDIRECT3D9* const gD3D = (LPDIRECT3D9*)(0x00971FA4);
 
     LPDIRECT3DDEVICE9* const gD3DDevice = (LPDIRECT3DDEVICE9*)(0x00971F94);
+
+    DWORD* const gTotalMemoryAllocated = (DWORD*)(0x00965EC0);
 }
