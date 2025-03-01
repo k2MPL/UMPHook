@@ -4,6 +4,8 @@
 
 #include <d3d9.h>
 
+#include "Types.h"
+
 namespace objects
 {
     extern BOOL* const gIsWindowedMode;
@@ -22,7 +24,10 @@ namespace objects
 
     extern LPDIRECT3DDEVICE9* const gD3DDevice;
 
-    //#TODO: Investigate: maybe field of bigger 'statictics' struct
-    //#TODO: Maybe change type to int. Investigate
+    //#TODO: Investigate: maybe field part of bigger 'statictics' struct
+    //#TODO: Maybe change type to int. Possible negative values?
     extern DWORD* const gTotalMemoryAllocated;
+
+    // This is set during boot time. Value is 3 for PC platform. Used as offset for different arrays
+    extern types::Platform* const gArchivePlatformIndex;
 }

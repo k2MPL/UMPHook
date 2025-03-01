@@ -1,0 +1,3 @@
+- Setup project to use USM crt. (Visual C++ 2003 runtime) 
+Rignt how there's lib version mismatch, dll is using newer one, and that creates desync between lib functions calls 
+(e.g. _aligned_malloc inside decompiled::AllocateAlignedMemory)

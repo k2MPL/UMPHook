@@ -100,6 +100,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>libMinHook.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(USM_PATH)\binkw32_.dll" ( 
@@ -131,6 +132,7 @@ copy /Y "$(TargetDir)$(TargetName).pdb" "$(USM_PATH)\binkw32.pdb"</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>libMinHook.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(USM_PATH)\binkw32_.dll" ( 
@@ -187,6 +189,7 @@ copy /Y "$(TargetDir)$(TargetName).pdb" "$(USM_PATH)\binkw32.pdb"</Command>
     <ClInclude Include="Functions.h" />
     <ClInclude Include="FunctionsDecompiled.h" />
     <ClInclude Include="Objects.h" />
+    <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

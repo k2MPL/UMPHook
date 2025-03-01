@@ -17,4 +17,8 @@ namespace objects
     LPDIRECT3DDEVICE9* const gD3DDevice = (LPDIRECT3DDEVICE9*)(0x00971F94);
 
     DWORD* const gTotalMemoryAllocated = (DWORD*)(0x00965EC0);
+
+    DWORD* const gPAKArchivePlatformIndex = (DWORD*)(0x0095C1E4);
+
+    types::Platform* const gArchivePlatformIndex = (types::Platform*)(0x0095C1E4);
 }

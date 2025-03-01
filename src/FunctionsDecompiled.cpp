@@ -138,8 +138,93 @@ namespace decompiled
     }
 }
 
+//#TODO: tmp storage
+static const char* const gUnknownString = (const char*)(0x00871BD1);
+static int* const gUnknownCounter = (int*)(0x00957CEC);
+static BYTE* const gUnknownFlag = (BYTE*)(0x00965E69);
+//#TODO: tmp storage
+
+class V0Class
+{
+    typedef void(*__thiscall V0Constructor_t)(void*);
+    static constexpr V0Constructor_t const gV0Constructor = (V0Constructor_t)(0x00420F00);
+
+public:
+    static void __fastcall Constructor(void* _this, void* _unused)
+    {
+        V0Class* data = (V0Class*)_this;
+        data->p0 = 0;
+        data->p1 = 0;
+        data->p2 = gUnknownString; //#TODO: Double check if p2 data type is correct
+        data->p3 = 0;
+
+        ++(*gUnknownCounter);
+    }
+
+    static void Init()
+    {
+        MH_CreateHook(gV0Constructor, V0Class::Constructor, NULL);
+        MH_EnableHook(gV0Constructor);
+    }
+
+public:
+    DWORD p0; // this
+    DWORD p1; // this + 4/0x4
+    const char* p2; // this + 8/0x8
+    DWORD p3; // this + 12/0xC
+};
+
+class V1Class : public V0Class
+{
+    using Parent_t = V0Class;
+
+    typedef void(*__thiscall V1Constructor_t)(void*);
+    static constexpr V1Constructor_t const gV1Constructor = (V1Constructor_t)(0x0058DEA0);
+
+public:
+    static void __fastcall Constructor(void* _this, void* _unused)
+    {
+        Parent_t::Constructor(_this, _unused);
+
+        V1Class* data = (V1Class*)_this;
+        data->p4 = 0;
+        data->p5 = FALSE;
+        data->p6 = FALSE;
+        data->p7 = -1;
+        data->p8 = 0;
+        data->p9 = *gUnknownFlag;
+        data->p10 = -1;
+        data->p11 = 0;
+        data->p12 = 0;
+    }
+
+    static void Init()
+    {
+        MH_CreateHook(gV1Constructor, V1Class::Constructor, NULL);
+        MH_EnableHook(gV1Constructor);
+    }
+
+public:
+    DWORD p4; // this + 16/0x10
+    BYTE p5; // this + 20/0x14
+    BYTE p6; // this + 21/0x15
+    BYTE padding_0[2];
+    int p7; // this + 24/0x18
+    DWORD p8; // this + 28/0x1C
+    DWORD padding_1; // this + 32/0x50 #TODO: Skipped 4 bytes/or unitialized field? 
+    BYTE p9; // this + 36/0x24
+    BYTE padding_2[3];
+    int p10; // this + 40/0x28
+    DWORD p11; // this + 44/0x2C
+    DWORD p12; // this + 48/0x30
+};
+
 void FunctionsDecompiledModule::Init()
 {
+#if 1
+    V0Class::Init();
+    V1Class::Init();
+#else
     MH_CreateHook(functions::RegisterGameWindowClass, decompiled::RegisterGameWindowClass, NULL);
     MH_EnableHook(functions::RegisterGameWindowClass);
 
@@ -157,4 +242,5 @@ void FunctionsDecompiledModule::Init()
 
     MH_CreateHook(functions::FreeMemory, decompiled::FreeMemory, NULL);
     MH_EnableHook(functions::FreeMemory);
+#endif
 }
