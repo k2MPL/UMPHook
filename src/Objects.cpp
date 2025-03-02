@@ -21,4 +21,12 @@ namespace objects
     DWORD* const gPAKArchivePlatformIndex = (DWORD*)(0x0095C1E4);
 
     types::Platform* const gArchivePlatformIndex = (types::Platform*)(0x0095C1E4);
+
+    // --- Unknown but used ---
+
+    const char* const gNullString = (const char*)(0x00871BD1);
+
+    extern int* const g_00957CEC = (int*)(0x00957CEC);
+
+    extern BYTE* const g_00965E69 = (BYTE*)(0x00965E69);
 }

@@ -30,4 +30,12 @@ namespace objects
 
     // This is set during boot time. Value is 3 for PC platform. Used as offset for different arrays
     extern types::Platform* const gArchivePlatformIndex;
+
+    extern const char* const gNullString;
+
+    // --- Unknown but used ---
+
+    extern int* const g_00957CEC;
+
+    extern BYTE* const g_00965E69;
 }
