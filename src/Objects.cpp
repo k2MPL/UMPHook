@@ -24,7 +24,7 @@ namespace objects
 
     // --- Unknown but used ---
 
-    const char* const gNullString = (const char*)(0x00871BD1);
+    char* const gNullString = (char*)(0x00871BD1);
 
     extern int* const g_00957CEC = (int*)(0x00957CEC);
 

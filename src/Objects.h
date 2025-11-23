@@ -31,10 +31,13 @@ namespace objects
     // This is set during boot time. Value is 3 for PC platform. Used as offset for different arrays
     extern types::Platform* const gArchivePlatformIndex;
 
-    extern const char* const gNullString;
+    extern char* const gNullString; // .rdata
+
+    //#TODO: V0Class gAmalgapakName = 0x0095CAD4
 
     // --- Unknown but used ---
 
+    //#TODO: Clarify. Strings count?
     extern int* const g_00957CEC;
 
     extern BYTE* const g_00965E69;
